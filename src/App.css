@@ -46,6 +46,10 @@ h1 {
     margin: 50px auto;
 }
 
+a {
+    margin: 10px auto 25px;
+}
+
 .primary-btn {
     background-color: #496dc9 !important;
     padding: 10px 25px !important;

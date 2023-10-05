@@ -13,7 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import HomeIcon from "@mui/icons-material/Home";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import SchoolIcon from "@mui/icons-material/School";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
@@ -191,6 +191,7 @@ function ResponsiveAppBar() {
                       signOut(auth)
                         .then(() => {
                           console.log("loggedOut");
+                          <Navigate to="/"></Navigate>;
                         })
                         .catch((e) => console.log(e.message));
                     }}
@@ -198,9 +199,7 @@ function ResponsiveAppBar() {
                     Se deconnecter
                   </Typography>
                 </MenuItem>
-              ) : (
-                <SignIn />
-              )}
+              ) : null}
             </Menu>
           </Box>
         </Toolbar>

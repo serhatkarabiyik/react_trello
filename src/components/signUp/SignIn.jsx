@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button, TextField } from "@mui/material";
 import { auth } from "../../firebase";
+import { Link } from "react-router-dom";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -47,7 +48,10 @@ export default function SignIn() {
           value={pass}
           onChange={handlePass}
         />
-        <Button type="submit">Se connecter</Button>
+        <Button type="submit" className="primary-btn">
+          Se connecter
+        </Button>
+        <Link to="/">Don't have an account ? Sign Up</Link>
       </form>
     </div>
   );

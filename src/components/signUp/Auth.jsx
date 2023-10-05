@@ -4,10 +4,6 @@ import { auth } from "../../firebase";
 
 export const AuthContext = React.createContext();
 
-export const useUser = () => {
-  return useContext(AuthContext);
-};
-
 export default function Auth({ children }) {
   const [authUser, setAuthUser] = useState(null);
 

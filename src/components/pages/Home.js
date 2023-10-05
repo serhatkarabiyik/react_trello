@@ -1,9 +1,10 @@
 import React from "react";
 import SignUp from "../signUp/SignUp";
 import TodoList from "./TodoList";
-import { useUser } from "../signUp/Auth";
+import { AuthContext } from "../signUp/Auth";
 
 export default function Home() {
-  const user = useUser();
+  const user = React.useContext(AuthContext);
+
   return <div>{!user ? <SignUp /> : <TodoList />}</div>;
 }

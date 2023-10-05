@@ -1,12 +1,12 @@
 import React from "react";
-import { useUser } from "../signUp/Auth";
+import { AuthContext } from "../signUp/Auth";
 
 export default function Profile() {
-  const user = useUser();
+  const user = React.useContext(AuthContext);
 
   return (
     <div className="page-container">
-      <h3>Bonjour {user.email}</h3>
+      <h3>Bonjour {user?.email}</h3>
     </div>
   );
 }

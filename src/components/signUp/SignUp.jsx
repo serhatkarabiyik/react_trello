@@ -2,6 +2,7 @@ import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { auth } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Link } from "react-router-dom";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -51,6 +52,7 @@ export default function SignUp() {
         <Button type="submit" className="primary-btn">
           S'inscrire
         </Button>
+        <Link to="/signIn">Have an account ? Sign In</Link>
       </form>
     </div>
   );
