@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { firestore } from "../../firebase";
 
 const TodoListPage = () => {
   const { id } = useParams();
@@ -22,7 +23,9 @@ const TodoListPage = () => {
       const updatedTasks = [...tasks, { text: newTask, finished: false }];
       setTasks(updatedTasks);
       // Sauvegarder les tâches dans le localStorage
-      localStorage.setItem(`project-${id}`, JSON.stringify(updatedTasks));
+      firestore.collection("projets").doc(projectId).update({
+        tasks: updatedTasks,
+      });
       // Réinitialiser le champ de texte de la nouvelle tâche
       setNewTask("");
     }
