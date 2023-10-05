@@ -30,7 +30,9 @@ export default function SignUp() {
   };
 
   return (
-    <div>
+    <div className="page-container">
+      <h1>Sign Up</h1>
+
       <form onSubmit={handleSubmit}>
         <TextField
           id="standard-basic"
@@ -46,7 +48,9 @@ export default function SignUp() {
           value={pass}
           onChange={handlePass}
         />
-        <Button type="submit">S'inscrire</Button>
+        <Button type="submit" className="primary-btn">
+          S'inscrire
+        </Button>
       </form>
     </div>
   );

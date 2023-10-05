@@ -20,6 +20,7 @@ export default function SignIn() {
     signInWithEmailAndPassword(auth, email, pass)
       .then((userCredential) => {
         const user = userCredential.user;
+        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -28,7 +29,9 @@ export default function SignIn() {
   };
 
   return (
-    <div>
+    <div className="page-container">
+      <h1>Sign In</h1>
+
       <form onSubmit={handleSubmit}>
         <TextField
           id="standard-basic"
