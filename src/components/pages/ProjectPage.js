@@ -1,5 +1,5 @@
 import { addDoc, deleteDoc, doc, updateDoc} from "firebase/firestore";
-import { getAllProjects, projectCollection} from "../../firebase";
+import { getAllProjects, projectCollection, addUserToProject, getUserIdByEmail } from "../../firebase";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
@@ -7,7 +7,6 @@ export default function ProjectPage() {
   const userId = localStorage.getItem('uid');
   const [userProjects, setUserProjects] = useState([]);
   const [newProjectName, setNewProjectName] = useState("");
-
   useEffect(() => {
     const fetchProjects = async () => {
       try {
@@ -26,6 +25,26 @@ export default function ProjectPage() {
   useEffect(() => {
     setUserProjects(userProjects);
   }, [userProjects]);
+
+  const addUserToCurrentProject = async (projectId) => {
+    try {
+      const newUserEmail = prompt("Veuillez entrer l'e-mail de l'utilisateur à ajouter au projet:");
+      if (newUserEmail) {
+        const userId = await getUserIdByEmail(newUserEmail);
+        if (userId) {
+          // Ajoute l'utilisateur au projet seulement si son ID est trouvé
+          await addUserToProject(projectId, userId);
+          alert("Utilisateur ajouté au projet avec succès !");
+        } else {
+          alert("Aucun utilisateur trouvé avec cet e-mail.");
+        }
+      } else {
+        alert("E-mail de l'utilisateur non fourni.");
+      }
+    } catch (error) {
+      alert("Erreur lors de l'ajout de l'utilisateur au projet : ", error);
+    }
+  };
 
   const addProject = async () => {
     if (newProjectName) {
@@ -121,6 +140,7 @@ export default function ProjectPage() {
             {userProjects.finished ? <span style={{ marginLeft: "10px", color: "green" }}>Terminé</span> : null}
             <button onClick={() => deleteProject(userProjects.id)}>Supprimer</button>
             <button onClick={() => updateProjectName(userProjects.id)}>Modifier</button>
+            <button onClick={addUserToCurrentProject}>Ajouter Utilisateur au Projet</button>
             {!userProjects.finished ? <button onClick={() => markAsFinished(userProjects.id)}>Valider</button> : null}
           </li>
         ))}
