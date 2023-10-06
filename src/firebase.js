@@ -6,7 +6,7 @@ import "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { getFirestore, getDocs, collection } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -27,9 +27,9 @@ export const firestore = getFirestore();
 
 export const projectCollection = collection(firestore, "project");
 
-export function getAllProjects() {
+export const getAllProjects = async () => {
   try {
-    const projectsSnapshot = getDocs(projectCollection);
+    const projectsSnapshot = await getDocs(projectCollection);
     const projects = [];
 
     projectsSnapshot.forEach((doc) => {
@@ -41,15 +41,14 @@ export function getAllProjects() {
     console.error("Erreur lors de la récupération des projets : ", error);
     throw error;
   }
-}
+};
 
 export const userCollection = collection(firestore, "users");
 
-export function getAllUsers() {
+export const getAllUsers = async () => {
   try {
-    const usersSnapshot = getDocs(userCollection);
+    const usersSnapshot = await getDocs(userCollection);
     const users = [];
-    console.log(usersSnapshot);
 
     usersSnapshot.forEach((doc) => {
       users.push({ ...doc.data(), id: doc.id });
@@ -60,4 +59,4 @@ export function getAllUsers() {
     console.error("Erreur lors de la récupération des users : ", error);
     throw error;
   }
-}
+};

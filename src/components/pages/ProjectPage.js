@@ -1,14 +1,11 @@
 import { addDoc, deleteDoc, doc, updateDoc} from "firebase/firestore";
-import { getAllProjects,  projectCollection} from "../../firebase";
-import { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../signUp/Auth";
+import { getAllProjects, projectCollection} from "../../firebase";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 export default function ProjectPage() {
-  const user = useContext(AuthContext);
-  const userId = user.uid;
-  const [projects, setProjects] = useState([]);
-  const [userProjects, setUserProjects] = useState();
+  const userId = localStorage.getItem('uid');
+  const [userProjects, setUserProjects] = useState([]);
   const [newProjectName, setNewProjectName] = useState("");
 
   useEffect(() => {
@@ -17,7 +14,7 @@ export default function ProjectPage() {
         const allProjects = await getAllProjects();
         // Filtrer les projets de l'utilisateur actuel
         const userProjects = allProjects.filter((project) => project.userId === userId);
-        setProjects(userProjects);
+        setUserProjects(userProjects);
       } catch (error) {
         console.error("Erreur lors de la récupération des projets : ", error);
       }
@@ -25,6 +22,10 @@ export default function ProjectPage() {
 
     fetchProjects();
   }, [userId]);
+
+  useEffect(() => {
+    setUserProjects(userProjects);
+  }, [userProjects]);
 
   const addProject = async () => {
     if (newProjectName) {
@@ -114,13 +115,13 @@ export default function ProjectPage() {
       />
       <button onClick={addProject}>Nouveau Projet</button>
       <ul>
-        {projects.map((project) => (
-          <li key={project.id}>
-            <Link to={`/project/${project.id}`}>{project.name || `Projet ${project.id}`}</Link>
-            {project.finished ? <span style={{ marginLeft: "10px", color: "green" }}>Terminé</span> : null}
-            <button onClick={() => deleteProject(project.id)}>Supprimer</button>
-            <button onClick={() => updateProjectName(project.id)}>Modifier</button>
-            {!project.finished ? <button onClick={() => markAsFinished(project.id)}>Valider</button> : null}
+        {userProjects.map((userProjects) => (
+          <li key={userProjects.id}>
+            <Link to={`/project/${userProjects.id}`}>Projet {userProjects.projectName}</Link>
+            {userProjects.finished ? <span style={{ marginLeft: "10px", color: "green" }}>Terminé</span> : null}
+            <button onClick={() => deleteProject(userProjects.id)}>Supprimer</button>
+            <button onClick={() => updateProjectName(userProjects.id)}>Modifier</button>
+            {!userProjects.finished ? <button onClick={() => markAsFinished(userProjects.id)}>Valider</button> : null}
           </li>
         ))}
       </ul>
