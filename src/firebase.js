@@ -45,6 +45,19 @@ getDocs(usersCol)
 
 import "firebase/firestore";
 
-const firestore = app.firestore();
+const firestore = getFirestore();
+
+export const projectCollection = collection(firestore, "projects");
+
+let projets = [];
+
+getDocs(projectCollection)
+  .then((snapshot) => {
+    snapshot.docs.forEach((doc) => {
+      projets.push({ ...doc.data(), id: doc.id });
+    });
+    console.log(projets);
+  })
+  .catch((e) => console.log(e));
 
 export { firestore };
