@@ -25,6 +25,11 @@ export default function SignIn() {
         // Connexion réussie
         const user = userCredential.user;
         console.log(user);
+        
+        // Stocker l'UID de l'utilisateur dans le localStorage
+        localStorage.setItem("uid", user.uid);
+        
+        // Naviguer vers la page des projets
         navigate("/project");
       })
       .catch((error) => {
