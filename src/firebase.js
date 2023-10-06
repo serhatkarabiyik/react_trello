@@ -42,3 +42,9 @@ getDocs(usersCol)
     console.log(users);
   })
   .catch((e) => console.log(e));
+
+import "firebase/firestore";
+
+const firestore = app.firestore();
+
+export { firestore };

@@ -22,6 +22,7 @@ export default function SignIn() {
       .then((userCredential) => {
         const user = userCredential.user;
         console.log(user);
+        history.push("/projet");
       })
       .catch((error) => {
         const errorCode = error.code;

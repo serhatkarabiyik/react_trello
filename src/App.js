@@ -9,7 +9,6 @@ import ProjectPage from "./components/pages/ProjectPage";
 import ProjectToDoList from "./components/pages/ProjectToDoList";
 import "./App.css";
 
-
 function App() {
   return (
     <div className="App">
@@ -17,8 +16,6 @@ function App() {
         <ResponsiveAppBar />
         <Routes>
           <Route path="/" element={<Home />} />
-
-          {/* <Route path="/Profile/:id" element={<Profile />} /> */}
           <Route path="/project" element={<ProjectPage />} />
           <Route path="project/:id" element={<ProjectToDoList />} />
           <Route path="/Profile/:id" element={<Profile />} />

@@ -23,7 +23,7 @@ const TodoListPage = () => {
       const updatedTasks = [...tasks, { text: newTask, finished: false }];
       setTasks(updatedTasks);
       // Sauvegarder les tâches dans le localStorage
-      firestore.collection("projets").doc(projectId).update({
+      firestore.collection("projets").doc(id).update({
         tasks: updatedTasks,
       });
       // Réinitialiser le champ de texte de la nouvelle tâche
@@ -41,7 +41,10 @@ const TodoListPage = () => {
 
   const editTask = (index) => {
     const updatedTasks = [...tasks];
-    const newTaskText = prompt("Modifier la tâche : ", updatedTasks[index].text);
+    const newTaskText = prompt(
+      "Modifier la tâche : ",
+      updatedTasks[index].text
+    );
     if (newTaskText !== null) {
       updatedTasks[index] = { text: newTaskText, finished: false };
       setTasks(updatedTasks);
