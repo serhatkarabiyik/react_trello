@@ -3,10 +3,12 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button, TextField } from "@mui/material";
 import { auth } from "../../firebase";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
+  const navigate = useNavigate();
 
   const handleMail = (e) => {
     setEmail(e.target.value);
@@ -20,13 +22,15 @@ export default function SignIn() {
     e.preventDefault();
     signInWithEmailAndPassword(auth, email, pass)
       .then((userCredential) => {
+        // Connexion réussie
         const user = userCredential.user;
         console.log(user);
-        history.push("/projet");
+        navigate("/project");
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
+        console.error(errorCode, errorMessage);
       });
   };
 
@@ -39,6 +43,7 @@ export default function SignIn() {
           id="standard-basic"
           label="Email"
           variant="standard"
+          type="email"
           value={email}
           onChange={handleMail}
         />
@@ -46,6 +51,7 @@ export default function SignIn() {
           id="standard-basic"
           label="Mot de passe"
           variant="standard"
+          type="password"
           value={pass}
           onChange={handlePass}
         />
