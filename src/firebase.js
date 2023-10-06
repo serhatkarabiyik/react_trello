@@ -13,6 +13,7 @@ import {
   deleteDoc,
   getDocFromCache,
 } from "firebase/firestore";
+import "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -29,23 +30,8 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 
-const db = getFirestore();
-const usersCol = collection(db, "users");
-
-let users = [];
-
-getDocs(usersCol)
-  .then((snapshot) => {
-    snapshot.docs.forEach((doc) => {
-      users.push({ ...doc.data(), id: doc.id });
-    });
-    console.log(users);
-  })
-  .catch((e) => console.log(e));
-
-import "firebase/firestore";
-
 const firestore = getFirestore();
+export { firestore };
 
 export const projectCollection = collection(firestore, "projects");
 
@@ -59,5 +45,3 @@ getDocs(projectCollection)
     console.log(projets);
   })
   .catch((e) => console.log(e));
-
-export { firestore };
