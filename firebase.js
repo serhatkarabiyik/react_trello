@@ -45,21 +45,23 @@ getDocs(usersCol)
 
 const firestore = getFirestore();
 
-export const getAllProjects = async () => {
-    try {
-      const projectsSnapshot = await getDocs(collection(projectCollection));
-      const projects = [];
-  
-      projectsSnapshot.forEach((doc) => {
-        projects.push({ ...doc.data(), id: doc.id });
-      });
-  
-      return projects;
-    } catch (error) {
-      console.error("Erreur lors de la récupération des projets : ", error);
-      throw error;
-    }
-  };
+export function getAllProjects(){
+  try {
+    const projectsSnapshot = getDocs(projectCollection);
+    const projects = [];
+
+    projectsSnapshot.forEach((doc) => {
+      projects.push({ ...doc.data(), id: doc.id });
+    });
+
+    return projects;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des projets : ", error);
+    throw error;
+  }
+
+}
+
 
 export const projectCollection = collection(firestore, "project");
 
