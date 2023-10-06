@@ -1,8 +1,9 @@
 import { Button, TextField } from "@mui/material";
 import React, { useState } from "react";
-import { auth } from "../../firebase";
+import { auth, firestore } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router-dom";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -21,12 +22,19 @@ export default function SignUp() {
     createUserWithEmailAndPassword(auth, email, pass)
       .then((userCredential) => {
         const user = userCredential.user;
-        console.log(user);
+        const userData = {
+          id: user.uid,
+          email: user.email,
+        };
+        addDoc(collection(firestore, "users"), userData)
+          .then(() => {
+            console.log("User ajouter");
+          })
+          .catch((e) => console.log(e));
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        // ..
       });
   };
 

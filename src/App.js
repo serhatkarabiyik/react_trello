@@ -8,6 +8,7 @@ import Auth from "./components/signUp/Auth";
 import ProjectPage from "./components/pages/ProjectPage";
 import ProjectToDoList from "./components/pages/ProjectToDoList";
 import "./App.css";
+import Admin from "./components/pages/Admin";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="project/:id" element={<ProjectToDoList />} />
           <Route path="/Profile/:id" element={<Profile />} />
           <Route path="/signIn" element={<SignIn />} />
+          <Route path="/admin" element={<Admin />} />
         </Routes>
       </Auth>
     </div>
