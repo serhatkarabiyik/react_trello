@@ -1,55 +1,67 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { firestore } from "../../firebase";
+import { doc, updateDoc, getDoc } from "firebase/firestore";
+import { projectCollection } from "../../firebase";
 
 const TodoListPage = () => {
   const { id } = useParams();
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState("");
-  const [projectName, setProjectName] = useState(""); // État pour le nom du projet
+  const [projectName, setProjectName] = useState(""); 
 
   useEffect(() => {
-    // Récupérer le nom du projet depuis le localStorage
-    const storedProjectName = localStorage.getItem(`project-name-${id}`);
-    setProjectName(storedProjectName || `Projet ${id}`);
+    const fetchProjectData = async () => {
+      try {
+        const projectDoc = doc(projectCollection, id);
+        const projectSnapshot = await getDoc(projectDoc);
+        if (projectSnapshot.exists()) {
+          const projectData = projectSnapshot.data();
+          setProjectName(projectData.projectName || `Projet ${id}`);
+          setTasks(projectData.tasks || []);
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données du projet :", error);
+      }
+    };
 
-    // Récupérer les tâches pour le projet spécifié depuis le localStorage ou une API
-    const storedTasks = JSON.parse(localStorage.getItem(`project-${id}`)) || [];
-    setTasks(storedTasks);
+    fetchProjectData();
   }, [id]);
 
-  const addTask = () => {
+  const addTask = async () => {
     if (newTask) {
-      const updatedTasks = [...tasks, { text: newTask, finished: false }];
-      setTasks(updatedTasks);
-      // Sauvegarder les tâches dans le localStorage
-      firestore.collection("projets").doc(id).update({
-        tasks: updatedTasks,
-      });
-      // Réinitialiser le champ de texte de la nouvelle tâche
-      setNewTask("");
+      try {
+        const updatedTasks = [...tasks, { text: newTask, finished: false }];
+        await updateDoc(doc(projectCollection, id), {
+          tasks: updatedTasks,
+        });
+        setTasks(updatedTasks);
+        setNewTask("");
+      } catch (error) {
+        console.error("Erreur lors de l'ajout de la tâche :", error);
+      }
     }
   };
 
-  const deleteTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
-    setTasks(updatedTasks);
-    // Sauvegarder les tâches mises à jour dans le localStorage
-    localStorage.setItem(`project-${id}`, JSON.stringify(updatedTasks));
+  const deleteTask = async (index) => {
+    try {
+      const updatedTasks = [...tasks];
+      updatedTasks.splice(index, 1);
+      await updateDoc(doc(projectCollection, id), {
+        tasks: updatedTasks,
+      });
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la tâche :", error);
+    }
   };
 
   const editTask = (index) => {
     const updatedTasks = [...tasks];
-    const newTaskText = prompt(
-      "Modifier la tâche : ",
-      updatedTasks[index].text
-    );
+    const newTaskText = prompt("Modifier la tâche :", updatedTasks[index].text);
     if (newTaskText !== null) {
       updatedTasks[index] = { text: newTaskText, finished: false };
       setTasks(updatedTasks);
-      // Sauvegarder les tâches mises à jour dans le localStorage
-      localStorage.setItem(`project-${id}`, JSON.stringify(updatedTasks));
+      updateTaskData(updatedTasks);
     }
   };
 
@@ -57,8 +69,17 @@ const TodoListPage = () => {
     const updatedTasks = [...tasks];
     updatedTasks[index] = { ...updatedTasks[index], finished: true };
     setTasks(updatedTasks);
-    // Sauvegarder les tâches mises à jour dans le localStorage
-    localStorage.setItem(`project-${id}`, JSON.stringify(updatedTasks));
+    updateTaskData(updatedTasks);
+  };
+
+  const updateTaskData = async (updatedTasks) => {
+    try {
+      await updateDoc(doc(projectCollection, id), {
+        tasks: updatedTasks,
+      });
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des tâches :", error);
+    }
   };
 
   return (
