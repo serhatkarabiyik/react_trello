@@ -1,10 +1,11 @@
-import { addDoc, deleteDoc, doc, updateDoc} from "firebase/firestore";
-import { getAllProjects, projectCollection} from "../../firebase";
+import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { getAllProjects, projectCollection } from "../../firebase";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { Button, TextField } from "@mui/material";
 
 export default function ProjectPage() {
-  const userId = localStorage.getItem('uid');
+  const userId = localStorage.getItem("uid");
   const [userProjects, setUserProjects] = useState([]);
   const [newProjectName, setNewProjectName] = useState("");
 
@@ -13,7 +14,9 @@ export default function ProjectPage() {
       try {
         const allProjects = await getAllProjects();
         // Filtrer les projets de l'utilisateur actuel
-        const userProjects = allProjects.filter((project) => project.userId === userId);
+        const userProjects = allProjects.filter(
+          (project) => project.userId === userId
+        );
         setUserProjects(userProjects);
       } catch (error) {
         console.error("Erreur lors de la récupération des projets : ", error);
@@ -36,7 +39,7 @@ export default function ProjectPage() {
           projectName: newProjectName,
           tasks: [],
         });
-  
+
         // Mettre à jour l'état local avec le nouveau projet
         const newProject = {
           id: projectRef.id,
@@ -44,7 +47,7 @@ export default function ProjectPage() {
           projectName: newProjectName,
           tasks: [],
         };
-  
+
         setUserProjects([...userProjects, newProject]);
         setNewProjectName("");
       } catch (error) {
@@ -53,14 +56,15 @@ export default function ProjectPage() {
     }
   };
 
-
   const deleteProject = async (projectId) => {
     try {
       // Supprimer le projet de la collection "projects" dans Firestore
       await deleteDoc(doc(projectCollection, projectId));
 
       // Mettre à jour l'état local en supprimant le projet
-      const updatedProjects = userProjects.filter((project) => project.id !== projectId);
+      const updatedProjects = userProjects.filter(
+        (project) => project.id !== projectId
+      );
       setUserProjects(updatedProjects);
     } catch (error) {
       console.error("Erreur lors de la suppression du projet : ", error);
@@ -78,11 +82,16 @@ export default function ProjectPage() {
 
         // Mettre à jour l'état local avec le nom du projet modifié
         const updatedProjects = userProjects.map((project) =>
-          project.id === projectId ? { ...project, projectName: newName } : project
+          project.id === projectId
+            ? { ...project, projectName: newName }
+            : project
         );
         setUserProjects(updatedProjects);
       } catch (error) {
-        console.error("Erreur lors de la mise à jour du nom du projet : ", error);
+        console.error(
+          "Erreur lors de la mise à jour du nom du projet : ",
+          error
+        );
       }
     }
   };
@@ -100,28 +109,61 @@ export default function ProjectPage() {
       );
       setUserProjects(updatedProjects);
     } catch (error) {
-      console.error("Erreur lors du marquage du projet comme terminé : ", error);
+      console.error(
+        "Erreur lors du marquage du projet comme terminé : ",
+        error
+      );
     }
   };
 
   return (
     <div>
       <h1>Liste des Projets</h1>
-      <input
-        type="text"
-        placeholder="Nom du Nouveau Projet"
-        value={newProjectName}
-        onChange={(e) => setNewProjectName(e.target.value)}
-      />
-      <button onClick={addProject}>Nouveau Projet</button>
+      <div>
+        <TextField
+          id="standard-basic"
+          label="Nom du Nouveau Projet"
+          variant="standard"
+          type="text"
+          value={newProjectName}
+          onChange={(e) => setNewProjectName(e.target.value)}
+        />
+        <Button className="primary-btn" onClick={addProject}>
+          Nouveau Projet
+        </Button>
+      </div>
+
       <ul>
         {userProjects.map((userProjects) => (
           <li key={userProjects.id}>
-            <Link to={`/project/${userProjects.id}`}>Projet {userProjects.projectName}</Link>
-            {userProjects.finished ? <span style={{ marginLeft: "10px", color: "green" }}>Terminé</span> : null}
-            <button onClick={() => deleteProject(userProjects.id)}>Supprimer</button>
-            <button onClick={() => updateProjectName(userProjects.id)}>Modifier</button>
-            {!userProjects.finished ? <button onClick={() => markAsFinished(userProjects.id)}>Valider</button> : null}
+            <Link to={`/project/${userProjects.id}`}>
+              Projet {userProjects.projectName}
+            </Link>
+            {userProjects.finished ? (
+              <span style={{ marginLeft: "10px", color: "green" }}>
+                Terminé
+              </span>
+            ) : null}
+            <Button
+              className="secondary-btn"
+              onClick={() => deleteProject(userProjects.id)}
+            >
+              Supprimer
+            </Button>
+            <Button
+              className="secondary-btn"
+              onClick={() => updateProjectName(userProjects.id)}
+            >
+              Modifier
+            </Button>
+            {!userProjects.finished ? (
+              <Button
+                className="secondary-btn"
+                onClick={() => markAsFinished(userProjects.id)}
+              >
+                Valider
+              </Button>
+            ) : null}
           </li>
         ))}
       </ul>

@@ -18,7 +18,6 @@ import SchoolIcon from "@mui/icons-material/School";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { AuthContext } from "../signUp/Auth";
-import SignIn from "../signUp/SignIn";
 
 const pages = [
   {
