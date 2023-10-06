@@ -39,6 +39,7 @@ export default function SignUp() {
           id="standard-basic"
           label="Email"
           variant="standard"
+          type="email"
           value={email}
           onChange={handleMail}
         />
@@ -46,6 +47,7 @@ export default function SignUp() {
           id="standard-basic"
           label="Mot de passe"
           variant="standard"
+          type="password"
           value={pass}
           onChange={handlePass}
         />
