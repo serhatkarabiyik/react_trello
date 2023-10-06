@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { auth, firestore } from "../../firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router-dom";
-import { addDoc } from "firebase/firestore";
+import { addDoc, collection } from "firebase/firestore";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -26,9 +26,8 @@ export default function SignUp() {
           id: user.uid,
           email: user.email,
         };
-
-        addDoc(firestore, userData)
-          .then((docRef) => {
+        addDoc(collection(firestore, "users"), userData)
+          .then(() => {
             console.log("User ajouter");
           })
           .catch((e) => console.log(e));
@@ -36,7 +35,6 @@ export default function SignUp() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        // ..
       });
   };
 

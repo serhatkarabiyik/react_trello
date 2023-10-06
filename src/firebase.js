@@ -1,19 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import "firebase/firestore";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  doc,
-  deleteDoc,
-  getDocFromCache,
-} from "firebase/firestore";
-import "firebase/firestore";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -30,18 +23,41 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 
-const firestore = getFirestore();
-export { firestore };
+export const firestore = getFirestore();
 
-export const projectCollection = collection(firestore, "projects");
+export const projectCollection = collection(firestore, "project");
 
-let projets = [];
+export function getAllProjects() {
+  try {
+    const projectsSnapshot = getDocs(projectCollection);
+    const projects = [];
 
-getDocs(projectCollection)
-  .then((snapshot) => {
-    snapshot.docs.forEach((doc) => {
-      projets.push({ ...doc.data(), id: doc.id });
+    projectsSnapshot.forEach((doc) => {
+      projects.push({ ...doc.data(), id: doc.id });
     });
-    console.log(projets);
-  })
-  .catch((e) => console.log(e));
+
+    return projects;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des projets : ", error);
+    throw error;
+  }
+}
+
+export const userCollection = collection(firestore, "users");
+
+export function getAllUsers() {
+  try {
+    const usersSnapshot = getDocs(userCollection);
+    const users = [];
+    console.log(usersSnapshot);
+
+    usersSnapshot.forEach((doc) => {
+      users.push({ ...doc.data(), id: doc.id });
+    });
+
+    return users;
+  } catch (error) {
+    console.error("Erreur lors de la récupération des users : ", error);
+    throw error;
+  }
+}
