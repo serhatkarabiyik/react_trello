@@ -1,5 +1,5 @@
 import { addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
-import { getAllProjects, projectCollection, , addUserToProject, getUserIdByEmail } from "../../firebase";
+import { getAllProjects, projectCollection, addUserToProject, getUserIdByEmail } from "../../firebase";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button, TextField } from "@mui/material";
@@ -29,26 +29,6 @@ export default function ProjectPage() {
   useEffect(() => {
     setUserProjects(userProjects);
   }, [userProjects]);
-
-  const addUserToCurrentProject = async (projectId) => {
-    try {
-      const newUserEmail = prompt("Veuillez entrer l'e-mail de l'utilisateur à ajouter au projet:");
-      if (newUserEmail) {
-        const userId = await getUserIdByEmail(newUserEmail);
-        if (userId) {
-          // Ajoute l'utilisateur au projet seulement si son ID est trouvé
-          await addUserToProject(projectId, userId);
-          alert("Utilisateur ajouté au projet avec succès !");
-        } else {
-          alert("Aucun utilisateur trouvé avec cet e-mail.");
-        }
-      } else {
-        alert("E-mail de l'utilisateur non fourni.");
-      }
-    } catch (error) {
-      alert("Erreur lors de l'ajout de l'utilisateur au projet : ", error);
-    }
-  };
 
   const addUserToCurrentProject = async (projectId) => {
     try {
