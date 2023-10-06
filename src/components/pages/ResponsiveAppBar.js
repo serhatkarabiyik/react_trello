@@ -13,8 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import HomeIcon from "@mui/icons-material/Home";
-import { Link, Navigate } from "react-router-dom";
-import SchoolIcon from "@mui/icons-material/School";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { AuthContext } from "../signUp/Auth";
@@ -30,6 +29,7 @@ const pages = [
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const navigate = useNavigate();
 
   const user = React.useContext(AuthContext);
   let baseSettings = [];
@@ -57,6 +57,15 @@ function ResponsiveAppBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleHomeButtonClick = () => {
+    const uid = localStorage.getItem('uid'); // Récupérer l'uid du localStorage
+    if (uid) {
+      navigate("/project"); // Si l'utilisateur est connecté (uid présent dans le localStorage), redirigez-le vers "/project"
+    } else {
+      navigate("/"); // Si l'utilisateur n'est pas connecté (pas d'uid dans le localStorage), redirigez-le vers "/"
+    }
   };
 
   return (
@@ -190,7 +199,8 @@ function ResponsiveAppBar() {
                       signOut(auth)
                         .then(() => {
                           console.log("loggedOut");
-                          <Navigate to="/"></Navigate>;
+                          localStorage.removeItem('uid');
+                          navigate("/")
                         })
                         .catch((e) => console.log(e.message));
                     }}
